@@ -111,7 +111,7 @@ recogiendo los `.jem` de `.minecraft/emf/export/`.
 #    https://modrinth.com/mod/entity-model-features
 #    https://modrinth.com/mod/entitytexturefeatures
 ./gradlew build
-# -> build/libs/armor-cem-compat-1.0.0.jar
+# -> build/libs/armor-cem-compat-1.1.0.jar
 ```
 
 ## Cómo se llegó a esto

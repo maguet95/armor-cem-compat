@@ -2,12 +2,50 @@
 
 ---
 
-## 1. Para nagi (Discord de Whimscape) — español
+## 1. Para tu amigo (modpack Living Vanilla) — español
+
+> **Fix del bug de armadura — versión final** 🛡️
+>
+> Es **un solo archivo**: `armor-cem-compat-1.1.0.jar` → carpeta **`mods/`**
+>
+> Y el pack de armadura se instala **tal cual de Modrinth, sin modificar**. Ya no hace falta
+> el `.zip` parcheado que te pasé antes.
+>
+> **Si ya instalaste lo anterior:**
+> 1. Borra de `resourcepacks/` el `Just 3d armors 1.4 [compat mods].zip`
+> 2. Pon el `Just 3d armors 1.4.zip` **original** de Modrinth
+> 3. Copia este `.jar` a `mods/` (reemplaza el anterior)
+>
+> Cero configuración. El mod trae dentro un paquete de recursos ("Compat de armadura 3D con
+> mods") que se activa solo. Necesita EMF y ETF, que ya los tienes.
+>
+> **La ventaja:** ahora puedes actualizar el pack de armadura desde Modrinth como cualquier
+> otro, sin que haya que volver a parchearlo cada vez.
+>
+> Con esto ya puedes meter todas las armaduras y dimensiones que quieras: las de mods se ven
+> normales y las vanilla mantienen el 3D de nagi, sin tocarle un píxel al pack.
+>
+> **Si alguna vez la armadura de mods se ve mal:** comprueba en *Opciones → Paquetes de
+> recursos* que "Compat de armadura 3D con mods" esté **por encima** del pack de armadura, y
+> **reinicia** el juego (recargar no basta). Viene bien puesto por defecto.
+>
+> Qué era, por si te interesa: el pack de armadura aplicaba su modelo 3D a **toda** armadura
+> equipada, también la de los mods, que usan otro mapa de textura. Y EMF no ofrecía forma de
+> filtrarlo, así que hubo que añadírsela.
+>
+> https://github.com/maguet95/armor-cem-compat
+
+---
+
+## 2. Para nagi (Discord de Whimscape) — español
 
 > ¡Hola! Soy amigo de un dev de modpacks y hemos estado usando **Just 3D Armors HMI** en uno
 > (Fabric 1.21.11). Nos topamos con el bug de las armaduras de mods —el que ya conoces— y en
-> vez de quitarlo nos pusimos a investigarlo a fondo. **Lo resolvimos**, y te traemos tanto la
-> causa exacta como el arreglo, por si te sirve.
+> vez de quitar el pack nos pusimos a investigarlo a fondo. **Lo resolvimos**, y te traemos la
+> causa exacta y la solución, por si te sirve.
+>
+> **No te pedimos nada ni hemos tocado tu pack**: lo que hicimos es un mod aparte, y tu pack
+> se instala tal cual sale de Modrinth. Solo queríamos que lo supieras.
 >
 > **La causa.** Los `.jem` de `optifine/cem/` no describen "el peto de diamante": describen la
 > capa de armadura de la entidad, así que capturan también las armaduras de otros mods. Como
@@ -19,14 +57,14 @@
 > **Por qué no se podía arreglar con un `.properties`.** Lo intentamos todo. La propiedad
 > `items` de EMF **llega vacía** en las capas de armadura; se demuestra en un renglón:
 > `items=none` coincide *teniendo armadura puesta*. Y aunque uses NBT, el modelo no se
-> actualiza al cambiarte de armadura hasta que pulsas F3+T.
+> actualiza al cambiarte de armadura hasta que pulsas F3+T. Eso último es un bug de EMF que
+> también afecta a cualquier pack con variantes.
 >
-> **La solución.** Escribimos un mod cliente de 10 KB que añade la condición que faltaba
-> (`armor_item`) y destraba los dos cachés que impedían actualizar el modelo. Con eso tu pack
-> funciona **sin modificar ni un píxel** de tu arte: la armadura vanilla mantiene tu 3D y la
-> de mods se ve correcta.
+> **La solución.** Un mod cliente de 53 KB que añade la condición que faltaba (`armor_item`) y
+> destraba los dos cachés que impedían actualizar el modelo. Tu pack queda **intacto**: se
+> instala el original y el mod hace el resto.
 >
-> https://github.com/maguet95/sangre-arcana-aportes/tree/main/fixes/just3darmors-modded-armor
+> https://github.com/maguet95/armor-cem-compat
 >
 > **Y una opción mejor, que solo puedes hacer tú.** Si algún día remapeas las UV de tu modelo
 > al layout vanilla 64×32, no haría falta ningún mod **y las armaduras de mods heredarían tu
@@ -45,13 +83,13 @@
 
 ---
 
-## 2. Para Traben (GitHub issue en Entity_Model_Features) — inglés
+## 3. Para Traben (issue en Entity_Model_Features) — inglés
 
 **Título:** `Armor CEM: items property is empty, and armor models never refresh variants in-game`
 
 > Hi! While making a 3D armor CEM pack work alongside modded armor, I ran into three separate
-> issues in EMF/ETF. I've implemented a working fix for all three and I'm happy to open a PR
-> if you want it upstream — but you'll almost certainly do it better from inside.
+> issues in EMF/ETF. I've implemented a working fix for all three and released it as a small
+> client mod — happy to open a PR if you'd rather have any of it upstream.
 >
 > **Environment:** Fabric 1.21.11, EMF 3.3.5, ETF 7.2.1.
 >
@@ -77,46 +115,26 @@
 > because both cause the model to be requested again. Reproducible with any CEM armor pack
 > using variants — no custom property needed.
 >
-> **What I did** (10 KB client mod, MIT):
+> **What I did** (53 KB client mod, MIT):
 > - registered an `armor_item` property via `ETFApi.registerCustomRandomPropertyFactory`,
 >   reading `((LivingEntity) state.entity()).getItemBySlot(slot)` — no NBT, no caching
 > - mixin on `PropertiesRandomProvider.entityCanUpdate()` → `true`
 > - mixin on `HumanoidArmorLayer.getArmorModel()` → calls `doVariantCheck`, using
 >   `EMFEntityRenderState.from(state)` since `HumanoidRenderState` doesn't implement it
+> - ships the rules as a built-in resource pack, so the armor pack stays untouched
 >
 > Result: vanilla armor keeps the pack's 3D model, modded armor renders correctly, and
 > switching armor updates instantly.
 >
-> Also possibly worth documenting: **the base `.jem` is required** for variants to be found —
-> `<name>2.jem` is never looked up unless `<name>.jem` exists, even with
-> `enforceOptifineVariationRequiresDefaultModel = false`. The changelog suggests otherwise.
-> A base `.jem` with `"models": []` works nicely as "variant 1 = vanilla".
+> **Two more things worth documenting:**
+> - **The base `.jem` is required** for variants to be found — `<name>2.jem` is never looked up
+>   unless `<name>.jem` exists, even with `enforceOptifineVariationRequiresDefaultModel = false`.
+>   The changelog suggests otherwise. A base `.jem` with `"models": []` works nicely as
+>   "variant 1 = vanilla".
+> - A `.properties` from a **higher-priority pack** does get associated with a `.jem` from a
+>   lower one (good — that's what makes a compat pack possible), but not the other way around.
 >
 > Full write-up, source and the mod:
 > https://github.com/maguet95/armor-cem-compat
 >
 > Thanks for EMF — it's a great mod and this was a pleasure to dig into.
-
----
-
-## 3. Para el amigo (modpack Living Vanilla) — español
-
-> **Fix del bug de armadura** 🛡️
->
-> Son 2 archivos y hacen falta **los dos**:
-> - `armor-cem-compat-1.0.0.jar` → carpeta **`mods/`**
-> - `Just 3d armors 1.4 [compat mods].zip` → carpeta **`resourcepacks/`**, **reemplazando** al
->   `Just 3d armors 1.4.zip` original (borra el viejo, no dejes los dos o se pisan)
->
-> Cero configuración. Con esto ya puedes meter todas las armaduras y dimensiones que quieras:
-> las de mods se ven normales y las vanilla mantienen el 3D de nagi, sin tocarle un píxel al pack.
->
-> El mod es de cliente, 10 KB, y va envuelto en try/catch para que no pueda tumbar el modpack.
-> Necesita EMF y ETF, que ya los tienes.
->
-> Qué era, por si te interesa: el pack de armadura aplicaba su modelo 3D a **toda** armadura
-> equipada, también la de los mods, que usan otro mapa de textura. Y EMF no ofrecía forma de
-> filtrarlo, así que hubo que añadírsela.
->
-> Explicación completa 👇
-> https://github.com/maguet95/sangre-arcana-aportes/tree/main/fixes/just3darmors-modded-armor
