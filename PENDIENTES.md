@@ -33,3 +33,26 @@ página y decidir si se publica el parche por separado o solo integrado.
 ## 3. Enviar los mensajes
 Ver MENSAJES.md: nagi (Discord) y Traben (issue). Esperar a que el amigo confirme que
 funciona en su modpack real de ~300 mods.
+
+## 4. Portar a NeoForge / Forge (si hay demanda)
+
+**EMF y ETF existen para `fabric`, `neoforge`, `quilt` y `forge`** (todos con 1.21.11), así que
+el bug afecta también a esas comunidades. La audiencia potencial es bastante mayor.
+
+**Coste estimado: bajo.** La mayor parte del código ya es agnóstica del loader:
+
+| Parte | ¿Cambia al portar? |
+|---|---|
+| `ArmorItemProperty` | **No** — solo usa clases de Minecraft y de ETF |
+| Los dos mixins | **No** — Mixin es común a todos los loaders |
+| Punto de entrada | Sí — `ClientModInitializer` → equivalente de NeoForge |
+| Registro del pack integrado | Sí — la API de packs integrados es distinta |
+| Manifiesto y build | Sí — `fabric.mod.json` → `neoforge.mods.toml` |
+
+**Decisión: esperar a que alguien lo pida.**
+Publicar una versión NeoForge sin probarla en condiciones es peor que no publicarla — el primer
+contacto de esa comunidad con el mod solo ocurre una vez. Y probarla bien exige montar otra
+instancia con NeoForge, otro pack de armadura 3D y otro mod de armadura.
+
+**Cómo medir la demanda:** los comentarios de Modrinth. Si aparece gente preguntando por
+NeoForge, merece la pena. Si no, se ahorró el trabajo.
