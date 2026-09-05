@@ -56,3 +56,25 @@ instancia con NeoForge, otro pack de armadura 3D y otro mod de armadura.
 
 **Cómo medir la demanda:** los comentarios de Modrinth. Si aparece gente preguntando por
 NeoForge, merece la pena. Si no, se ahorró el trabajo.
+
+## 5. Recuperar el logo real de Maguet Corporation
+
+Enmanuel diseñó una **M** como logo del holding, en la época de AMI Global. Notion lo confirma
+(*"Logo: ✅ diseñado"* en la página de Maguet Corporation) pero **no adjunta la imagen**.
+
+**Buscado sin éxito (2026-09-04):**
+- Disco completo: `Maguet/`, Downloads, Pictures, Desktop → nada
+- `Maguet/negocios/ami-global/` → **carpeta vacía** (posiblemente perdido con el SSD de junio)
+- GitHub `maguet95/ami-platform`: 749 archivos en `main` y `development`, **0 coincidencias**
+  con maguet/holding/corp. Solo logos de AMI (`logos/`, `logos/Sin Comprimir/`, `vectores/`)
+- Canva: ninguna búsqueda devuelve un diseño llamado Maguet
+
+**Dónde puede estar todavía:**
+- **Google Drive** (sin acceso desde Claude Code — pedírselo a Enmanuel)
+- **Canva**, diseño llamado solo `LOGO`, 3 páginas, actualizado en junio 2024:
+  https://www.canva.com/d/zTn0bz-Tfd47pyq ← el candidato más probable
+- Discord, teléfono, u otro respaldo
+
+**Cuando aparezca:** se puede convertir a pixel art en el mismo estilo que el icono del mod,
+conservando su forma y colores reales. Mientras tanto se usa una de las variantes generadas en
+`Escritorio/CAPTURAS-modrinth/iconos-propuesta/` (oro, diamante o esmeralda).
